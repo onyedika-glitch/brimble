@@ -48,4 +48,5 @@ services:
 
 networks:
   brimble-net:
+    name: brimble-net
     driver: bridge
