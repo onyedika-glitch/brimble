@@ -4,7 +4,7 @@ A high-performance, containerized deployment platform built for the Brimble Engi
 
 ## 📺 Project Demo
 **[Link to Screen Recording]**  
-*(Paste your Loom/YouTube link here)*
+https://www.loom.com/share/519f33d3ed6c4a9d99fb9dcb50b54137
 
 ---
 
