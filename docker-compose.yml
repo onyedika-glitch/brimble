@@ -1,0 +1,51 @@
+services:
+  backend:
+    build: ./backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./backend/src:/app/src
+      - ./backend/prisma:/app/prisma
+      - ./backend/package.json:/app/package.json
+      - ./backend/tsconfig.json:/app/tsconfig.json
+    environment:
+      - DATABASE_URL=file:./dev.db
+      - CADDY_HOST=caddy
+      - BUILDKIT_HOST=tcp://buildkit:1234
+    networks:
+      - brimble-net
+    depends_on:
+      - buildkit
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/package.json:/app/package.json
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+      - ./frontend/index.html:/app/index.html
+    networks:
+      - brimble-net
+
+  caddy:
+    image: caddy:latest
+    ports:
+      - "8080:80"
+      - "2019:2019"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+    networks:
+      - brimble-net
+
+  buildkit:
+    image: moby/buildkit:latest
+    privileged: true
+    command: --addr tcp://0.0.0.0:1234
+    networks:
+      - brimble-net
+
+networks:
+  brimble-net:
+    driver: bridge

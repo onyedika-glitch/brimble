@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client"
+  output   = "/app/generated/client"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Deployment {
+  id          String   @id @default(uuid())
+  gitUrl      String?
+  name        String
+  status      String   // pending, building, deploying, running, failed
+  imageTag    String?
+  liveUrl     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  containerId String?
+  port        Int?
+  logs        Log[]
+}
+
+model Log {
+  id           String     @id @default(uuid())
+  content      String
+  createdAt    DateTime   @default(now())
+  deployment   Deployment @relation(fields: [deploymentId], references: [id])
+  deploymentId String
+}

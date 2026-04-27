@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+dist
+.git
+backend/node_modules
+frontend/node_modules
+backend/dist
+frontend/dist
+backend/generated
+frontend/generated
+**/*.db
+**/*.db-journal
