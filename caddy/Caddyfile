@@ -2,14 +2,15 @@
     admin 0.0.0.0:2019
 }
 
-:80 {
-    # Route everything starting with /api to the backend
+# Dashboard & API ONLY
+http://localhost:80, http://127.0.0.1:80 {
     handle_path /api* {
         reverse_proxy backend:3001
     }
-
-    # Route everything else to the frontend
     handle {
         reverse_proxy frontend:5173
     }
 }
+
+# Any other subdomains will be added dynamically by the backend
+# NO catch-all here!

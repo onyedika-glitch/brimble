@@ -7,6 +7,7 @@ services:
       - ./backend/prisma:/app/prisma
       - ./backend/package.json:/app/package.json
       - ./backend/tsconfig.json:/app/tsconfig.json
+      - /app/generated
     environment:
       - DATABASE_URL=file:./dev.db
       - CADDY_HOST=caddy

@@ -4,18 +4,34 @@ import { promisify } from 'util';
 const execAsync = promisify(exec);
 
 export class DockerService {
-    async runContainer(name: string, image: string): Promise<{ containerId: string; port: number }> {
-        // Run container with a random port mapped to whatever Port the app uses (usually 80 or 3000)
-        // Run container in the same network as the backend/caddy
-        const { stdout } = await execAsync(`docker run -d --name ${name} --network brimble-net -p 80 ${image}`);
+    async runContainer(name: string, image: string, internalPort: number): Promise<{ containerId: string; port: number }> {
+        // Clean up any old container with the same name
+        try {
+            await execAsync(`docker rm -f ${name}`);
+        } catch (e) {
+            // Ignore
+        }
+
+        // Run container mapping the standardized internal port (80)
+        const { stdout } = await execAsync(`docker run -d --name ${name} --network brimble-net -p ${internalPort} ${image}`);
         const containerId = stdout.trim();
 
-        // Get the assigned host port automatically
-        const { stdout: inspectOutput } = await execAsync(`docker inspect --format='{{(index (index .NetworkSettings.Ports "80/tcp") 0).HostPort}}' ${containerId}`);
-        const hostPort = inspectOutput.trim();
+        // Wait a moment for it to stabilize
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Get the host port that Docker assigned
+        const { stdout: inspectJson } = await execAsync(`docker inspect ${containerId}`);
+        const inspect = JSON.parse(inspectJson)[0];
+        const ports = inspect.NetworkSettings.Ports;
+
+        let hostPort = '';
+        const portKey = `${internalPort}/tcp`;
+        if (ports[portKey] && ports[portKey][0]) {
+            hostPort = ports[portKey][0].HostPort;
+        }
 
         if (!hostPort) {
-            throw new Error('Could not determine host port for the container');
+            throw new Error(`Failed to map port ${internalPort}.`);
         }
 
         return {

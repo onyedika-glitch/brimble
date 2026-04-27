@@ -23,4 +23,4 @@ RUN npx prisma generate
 
 EXPOSE 3001
 
-CMD npx prisma db push --accept-data-loss && npm run dev
+CMD npx prisma generate && npx prisma db push --accept-data-loss && npm run dev
