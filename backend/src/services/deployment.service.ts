@@ -64,6 +64,8 @@ export class DeploymentService {
             this.relaunchDeployment(id).then(() => {
                 if (options?.cronSchedule) cronRunner.schedule(id, options.cronSchedule);
             }).catch(console.error);
+        } else if (type === 'blueprint') {
+            this.provisionBlueprint(id, gitUrl, options?.teamId, options?.region).catch(console.error);
         }
 
         return deployment;
@@ -403,6 +405,251 @@ export class DeploymentService {
         await prisma.usageRecord.create({
             data: { teamId, metric, value }
         });
+    }
+
+    private parseYaml(yamlStr: string): any {
+        const lines = yamlStr.split('\n');
+        const result: any = { services: [] };
+        let currentService: any = null;
+        let currentEnvVars: any[] = [];
+        let insideEnvVars = false;
+
+        for (let line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed || trimmed.startsWith('#')) continue;
+
+            if (trimmed.startsWith('-')) {
+                if (currentService) {
+                    if (currentEnvVars.length > 0) currentService.envVars = currentEnvVars;
+                    result.services.push(currentService);
+                }
+                currentService = {};
+                currentEnvVars = [];
+                insideEnvVars = false;
+
+                const rest = trimmed.slice(1).trim();
+                if (rest) {
+                    const parts = rest.split(':');
+                    if (parts.length >= 2) {
+                        const key = parts[0].trim();
+                        const val = parts.slice(1).join(':').trim();
+                        currentService[key] = val.replace(/['"]/g, '');
+                    }
+                }
+            } else {
+                const parts = trimmed.split(':');
+                if (parts.length >= 2) {
+                    const key = parts[0].trim();
+                    const val = parts.slice(1).join(':').trim();
+
+                    if (key === 'envVars') {
+                        insideEnvVars = true;
+                        continue;
+                    }
+
+                    if (insideEnvVars) {
+                        if (key.startsWith('-')) {
+                            const cleanKey = key.slice(1).trim();
+                            if (cleanKey === 'key') {
+                                currentEnvVars.push({ key: val.replace(/['"]/g, '') });
+                            }
+                        } else if (key === 'value') {
+                            if (currentEnvVars.length > 0) {
+                                currentEnvVars[currentEnvVars.length - 1].value = val.replace(/['"]/g, '');
+                            }
+                        }
+                    } else if (currentService) {
+                        currentService[key] = val.replace(/['"]/g, '');
+                    }
+                }
+            }
+        }
+
+        if (currentService) {
+            if (currentEnvVars.length > 0) currentService.envVars = currentEnvVars;
+            result.services.push(currentService);
+        }
+
+        return result;
+    }
+
+    async validateBlueprint(gitUrl: string) {
+        const id = `validate-bp-${Date.now()}`;
+        const workspace = path.join(process.cwd(), 'workspaces', id);
+        
+        try {
+            await fs.mkdir(workspace, { recursive: true });
+            await git.clone(gitUrl, workspace, ['--depth', '1']);
+            
+            let yamlPath = path.join(workspace, 'rimble.yaml');
+            let hasYaml = false;
+            try {
+                await fs.access(yamlPath);
+                hasYaml = true;
+            } catch {
+                try {
+                    yamlPath = path.join(workspace, 'render.yaml');
+                    await fs.access(yamlPath);
+                    hasYaml = true;
+                } catch {}
+            }
+            
+            if (!hasYaml) {
+                throw new Error("Could not find 'rimble.yaml' or 'render.yaml' file at the root of the repository.");
+            }
+            
+            const yamlStr = await fs.readFile(yamlPath, 'utf8');
+            const spec = this.parseYaml(yamlStr);
+            
+            if (!spec || !Array.isArray(spec.services) || spec.services.length === 0) {
+                throw new Error("Blueprint spec is invalid: 'services' must be a non-empty array.");
+            }
+            
+            for (let i = 0; i < spec.services.length; i++) {
+                const s = spec.services[i];
+                if (!s.type) {
+                    throw new Error(`Service at index ${i} is missing a 'type' property.`);
+                }
+                if (!s.name) {
+                    throw new Error(`Service at index ${i} is missing a 'name' property.`);
+                }
+                const allowedTypes = ['app', 'postgres', 'redis', 'worker', 'cron'];
+                if (!allowedTypes.includes(s.type)) {
+                    throw new Error(`Service '${s.name || i}' has an invalid type '${s.type}'. Allowed types are: ${allowedTypes.join(', ')}.`);
+                }
+            }
+            
+            fs.rm(workspace, { recursive: true, force: true }).catch(() => {});
+            
+            return {
+                valid: true,
+                services: spec.services,
+                yaml: yamlStr
+            };
+        } catch (err: any) {
+            fs.rm(workspace, { recursive: true, force: true }).catch(() => {});
+            return {
+                valid: false,
+                error: err.message || "An error occurred while validating the blueprint."
+            };
+        }
+    }
+
+    async provisionBlueprint(blueprintId: string, gitUrl: string, teamId?: string, region?: string) {
+        this.log(blueprintId, `📂 Cloning blueprint repository: ${gitUrl}...`);
+        const workspace = path.join(process.cwd(), 'workspaces', blueprintId);
+        
+        try {
+            await fs.mkdir(workspace, { recursive: true });
+            await git.clone(gitUrl, workspace, ['--depth', '1']);
+            
+            let yamlPath = path.join(workspace, 'rimble.yaml');
+            let hasYaml = false;
+            try {
+                await fs.access(yamlPath);
+                hasYaml = true;
+            } catch {
+                try {
+                    yamlPath = path.join(workspace, 'render.yaml');
+                    await fs.access(yamlPath);
+                    hasYaml = true;
+                } catch {}
+            }
+            
+            if (!hasYaml) {
+                throw new Error("Could not find 'rimble.yaml' or 'render.yaml' file at the root of the repository.");
+            }
+            
+            const yamlStr = await fs.readFile(yamlPath, 'utf8');
+            this.log(blueprintId, `📄 Read blueprint specification successfully.`);
+            
+            const spec = this.parseYaml(yamlStr);
+            this.log(blueprintId, `ℹ️ Found ${spec.services.length} services in blueprint.`);
+            await prisma.deployment.update({ 
+                where: { id: blueprintId }, 
+                data: { status: 'deploying', imageTag: yamlStr }
+            });
+
+            const childIds: string[] = [];
+
+            // First pass: Provision all databases
+            for (const service of spec.services) {
+                if (service.type === 'postgres' || service.type === 'redis') {
+                    this.log(blueprintId, `🗄️ Provisioning database: ${service.name} (${service.type})...`);
+                    const db = await this.createDeployment('', service.type, service.name, {
+                        teamId, region
+                    });
+                    childIds.push(db.id);
+                }
+            }
+
+            // Wait 4 seconds for DB to start up and set status/connection urls
+            if (childIds.length > 0) {
+                this.log(blueprintId, `⏳ Waiting for databases to initialize...`);
+                await new Promise(r => setTimeout(r, 4000));
+            }
+
+            const dbEnvVars: { key: string; value: string }[] = [];
+            for (const childId of childIds) {
+                const db = await prisma.deployment.findUnique({ where: { id: childId } });
+                if (db && db.liveUrl) {
+                    const connectionString = decrypt(db.liveUrl);
+                    const envKey = db.type === 'postgres' ? 'DATABASE_URL' : 'REDIS_URL';
+                    dbEnvVars.push({ key: envKey, value: connectionString });
+                    this.log(blueprintId, `💡 Injected ${envKey} from ${db.name}`);
+                }
+            }
+
+            // Second pass: Provision other services (apps, workers, crons)
+            for (const service of spec.services) {
+                if (service.type !== 'postgres' && service.type !== 'redis') {
+                    this.log(blueprintId, `🚀 Building service: ${service.name} (${service.type})...`);
+                    const serviceGitUrl = service.gitUrl || gitUrl;
+                    const dep = await this.createDeployment(serviceGitUrl, service.type, service.name, {
+                        teamId, region,
+                        startCommand: service.startCommand,
+                        cronSchedule: service.cronSchedule,
+                    });
+                    
+                    const serviceEnvVars = service.envVars || [];
+                    const finalEnvVars = [...serviceEnvVars, ...dbEnvVars];
+
+                    for (const ev of finalEnvVars) {
+                        await prisma.environmentVariable.create({
+                            data: {
+                                id: uuidv4(),
+                                deploymentId: dep.id,
+                                key: ev.key,
+                                value: ev.value,
+                            }
+                        });
+                    }
+
+                    childIds.push(dep.id);
+                }
+            }
+
+            // Clean up workspace folder
+            fs.rm(workspace, { recursive: true, force: true }).catch(() => {});
+
+            // Update blueprint status to running and store child IDs in liveUrl
+            await prisma.deployment.update({
+                where: { id: blueprintId },
+                data: {
+                    status: 'running',
+                    liveUrl: JSON.stringify(childIds)
+                }
+            });
+            
+            this.log(blueprintId, `✅ Blueprint stack successfully provisioned!`);
+        } catch (err: any) {
+            this.log(blueprintId, `❌ Blueprint orchestration failed: ${err.message}`);
+            fs.rm(workspace, { recursive: true, force: true }).catch(() => {});
+            await prisma.deployment.update({
+                where: { id: blueprintId },
+                data: { status: 'failed' }
+            });
+        }
     }
 
     private async log(id: string, message: string) {

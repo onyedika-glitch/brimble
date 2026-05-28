@@ -28,12 +28,21 @@ export async function deploymentRoutes(fastify: FastifyInstance) {
         });
     });
 
+    fastify.post('/deployments/validate-blueprint', async (request: FastifyRequest, reply: FastifyReply) => {
+        const schema = z.object({
+            gitUrl: z.string()
+        });
+        const { gitUrl } = schema.parse(request.body);
+        const result = await deploymentService.validateBlueprint(gitUrl);
+        return reply.send(result);
+    });
+
     fastify.post('/deployments', async (request: FastifyRequest, reply: FastifyReply) => {
         const user = await getUserFromRequest(request);
         const schema = z.object({
-            gitUrl: z.string().url().optional(),
+            gitUrl: z.string().optional(),
             name: z.string().optional(),
-            type: z.enum(['app', 'postgres', 'redis', 'worker', 'cron']).default('app'),
+            type: z.enum(['app', 'postgres', 'redis', 'worker', 'cron', 'blueprint']).default('app'),
             teamId: z.string().optional(),
             region: z.string().optional(),
             cronSchedule: z.string().optional(),

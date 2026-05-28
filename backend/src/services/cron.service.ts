@@ -1,9 +1,16 @@
 /// <reference types="node" />
 import cron from 'node-cron';
 import { prisma } from '../index.js';
-import { DeploymentService } from './deployment.service.js';
 
-const deploymentService = new DeploymentService();
+// Lazily resolved to break the circular dependency with deployment.service.ts
+let _deploymentService: any = null;
+async function getDeploymentService() {
+    if (!_deploymentService) {
+        const { DeploymentService } = await import('./deployment.service.js');
+        _deploymentService = new DeploymentService();
+    }
+    return _deploymentService;
+}
 
 class CronRunner {
     private tasks = new Map<string, cron.ScheduledTask>();
@@ -30,7 +37,8 @@ class CronRunner {
         }
         const task = cron.schedule(expression, async () => {
             console.log(`[CronRunner] Triggering job ${deploymentId}`);
-            await deploymentService.relaunchDeployment(deploymentId);
+            const svc = await getDeploymentService();
+            await svc.relaunchDeployment(deploymentId);
         });
         this.tasks.set(deploymentId, task);
     }
