@@ -44,6 +44,8 @@ services:
     image: moby/buildkit:latest
     privileged: true
     command: --addr tcp://0.0.0.0:1234
+    volumes:
+      - buildkit-cache:/var/lib/buildkit
     networks:
       - brimble-net
 
@@ -51,3 +53,7 @@ networks:
   brimble-net:
     name: brimble-net
     driver: bridge
+
+volumes:
+  buildkit-cache:
+    name: brimble-buildkit-cache
