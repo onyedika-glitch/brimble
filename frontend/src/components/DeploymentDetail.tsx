@@ -90,7 +90,7 @@ export function DeploymentDetail({
     const [minR, setMinR] = useState(deployment.minReplicas);
     const [maxR, setMaxR] = useState(deployment.maxReplicas);
     const [cpuT, setCpuT] = useState(deployment.cpuThreshold);
-    const [tab, setTab] = useState<'overview' | 'env' | 'domains' | 'disks' | 'health' | 'scaling' | 'logs'>('overview');
+    const [tab, setTab] = useState<'overview' | 'metrics' | 'env' | 'domains' | 'disks' | 'health' | 'scaling' | 'logs'>('overview');
 
     const inv = () => qc.invalidateQueries({ queryKey: ['deployment', id] });
 
@@ -277,7 +277,7 @@ export function DeploymentDetail({
                         </div>
 
                         {/* Stack Services checklist/list */}
-                        <div className="bg-[#111113] border border-zinc-800/60 rounded-2xl p-6 space-y-4">
+                        <div className="bg-[#111113] border border-zinc-800/60 rounded-lg p-6 space-y-4">
                             <h3 className="text-sm font-bold text-zinc-300 uppercase tracking-widest flex items-center gap-2">
                                 <Layers size={14} className="text-pink-400" />
                                 Stack Services
@@ -331,7 +331,7 @@ export function DeploymentDetail({
                         </div>
 
                         {/* Read-only spec editor */}
-                        <div className="bg-[#111113] border border-zinc-800/60 rounded-2xl p-6">
+                        <div className="bg-[#111113] border border-zinc-800/60 rounded-lg p-6">
                             <div className="flex justify-between items-center mb-3">
                                 <h3 className="text-xs font-bold text-zinc-300 uppercase tracking-widest">rimble.yaml Specification</h3>
                                 <span className="text-[10px] font-bold bg-pink-500/10 text-pink-400 px-2 py-0.5 rounded border border-pink-500/20 uppercase tracking-wide">
@@ -349,7 +349,7 @@ export function DeploymentDetail({
                 {tab === 'overview' && deployment.type === 'postgres' && pgInfo && (
                     <div className="space-y-6">
                         {/* Connection Strings Card */}
-                        <div className="bg-[#111113] border border-zinc-800/60 rounded-2xl p-6 space-y-5">
+                        <div className="bg-[#111113] border border-zinc-800/60 rounded-lg p-6 space-y-5">
                             <h3 className="text-sm font-bold text-zinc-300 uppercase tracking-widest">PostgreSQL Connection Strings</h3>
 
                             {/* Internal String */}
@@ -393,7 +393,7 @@ export function DeploymentDetail({
                 {tab === 'overview' && deployment.type === 'redis' && redisInfo && (
                     <div className="space-y-6">
                         {/* Connection Strings Card */}
-                        <div className="bg-[#111113] border border-zinc-800/60 rounded-2xl p-6 space-y-5">
+                        <div className="bg-[#111113] border border-zinc-800/60 rounded-lg p-6 space-y-5">
                             <h3 className="text-sm font-bold text-zinc-300 uppercase tracking-widest">Redis Connection Strings</h3>
 
                             {/* Internal String */}

@@ -1,5 +1,5 @@
 import type { DeploymentStatus } from '../types';
-import { CheckCircle2, XCircle, Clock, Loader2, Rocket, Database, Cpu, GitPullRequest, Layers } from 'lucide-react';
+import { Clock, Rocket, Database, Cpu, GitPullRequest, Layers } from 'lucide-react';
 
 const STATUS_CONFIG: Record<string, { bg: string; text: string; dot: string; label: string; spinning?: boolean }> = {
     pending:   { bg: 'bg-zinc-500/10', text: 'text-zinc-400', dot: 'bg-zinc-400', label: 'Pending' },
@@ -73,7 +73,7 @@ export function EmptyState({ icon: Icon, title, description, children }: {
 }) {
     return (
         <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
-            <div className="w-14 h-14 rounded-2xl bg-zinc-800/50 flex items-center justify-center mb-4">
+            <div className="w-14 h-14 rounded-lg bg-zinc-800/50 flex items-center justify-center mb-4">
                 <Icon size={24} className="text-zinc-600" />
             </div>
             <h3 className="text-base font-semibold text-zinc-300 mb-1">{title}</h3>

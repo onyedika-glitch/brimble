@@ -121,7 +121,7 @@ export function TeamPanel({ team }: { team: Team }) {
             </div>
 
             {/* ─── Main Content Pane ─── */}
-            <div className="bg-[#111113] border border-zinc-800/80 rounded-2xl p-8 shadow-2xl shadow-black/40 min-h-[480px]">
+            <div className="bg-[#111113] border border-zinc-800/80 rounded-lg p-8 shadow-2xl shadow-black/40 min-h-[480px]">
                 
                 {/* ─── USAGE TAB ─── */}
                 {tab === 'usage' && (

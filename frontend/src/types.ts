@@ -1,5 +1,5 @@
 export type DeploymentStatus = 'pending' | 'building' | 'deploying' | 'running' | 'failed' | 'stopped';
-export type ResourceType = 'app' | 'postgres' | 'redis' | 'worker' | 'cron';
+export type ResourceType = 'app' | 'postgres' | 'redis' | 'worker' | 'cron' | 'blueprint';
 
 export interface User {
     id: string;

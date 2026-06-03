@@ -1,12 +1,48 @@
 @import "tailwindcss";
 
 :root {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --theme-zinc-0: #ffffff;
+  --theme-zinc-200: #e4e4e7;
+  --theme-zinc-400: #a1a1aa;
+  --theme-zinc-500: #71717a;
+  --theme-zinc-600: #52525b;
+  --theme-zinc-700: #3f3f46;
+  --theme-zinc-800: #27272a;
+  --theme-zinc-850: #1f1f23;
+  --theme-zinc-900: #18181b;
+  --theme-zinc-925: #111113;
+  --theme-zinc-950: #09090b;
+  --theme-zinc-975: #070709;
+  --theme-indigo-400: #818cf8;
+  --theme-indigo-500: #6366f1;
+  --theme-indigo-600: #4f46e5;
+  --theme-violet-500: #8b5cf6;
+  --theme-emerald-400: #34d399;
+  --theme-emerald-500: #10b981;
+  --theme-red-400: #f87171;
+  --theme-red-500: #ef4444;
+  --theme-amber-400: #fbbf24;
+  --theme-blue-400: #60a5fa;
+  --theme-pink-400: #f472b6;
+  --ds-surface-base: var(--theme-zinc-950);
+  --ds-surface-raised: var(--theme-zinc-975);
+  --ds-surface-card: var(--theme-zinc-900);
+  --ds-surface-overlay: var(--theme-zinc-925);
+  --ds-surface-input: rgba(9, 9, 11, 0.6);
+  --ds-border-default: rgba(39, 39, 42, 0.75);
+  --ds-border-hover: rgba(63, 63, 70, 0.9);
+  --ds-text-primary: var(--theme-zinc-200);
+  --ds-text-heading: var(--theme-zinc-0);
+  --ds-text-secondary: var(--theme-zinc-400);
+  --ds-text-muted: var(--theme-zinc-500);
+  --ds-text-dimmed: var(--theme-zinc-600);
+
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: dark;
-  color: #e4e4e7;
-  background-color: #09090b;
+  color: var(--ds-text-primary);
+  background-color: var(--ds-surface-base);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -23,6 +59,9 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(24, 24, 27, 0.45) 0, rgba(7, 7, 9, 0) 260px),
+    var(--ds-surface-base);
 }
 
 #root {
@@ -30,23 +69,24 @@ body {
   min-height: 100vh;
 }
 
-/* ─── Scrollbar ────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(113, 113, 122, 0.3);
   border-radius: 999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(113, 113, 122, 0.5);
 }
 
-/* ─── Animations ───────────────────────────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
@@ -62,24 +102,18 @@ body {
   50% { opacity: 0.4; }
 }
 
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
 .animate-fadeIn {
-  animation: fadeIn 0.3s ease-out both;
+  animation: fadeIn 0.2s ease-out both;
 }
 
 .animate-slideIn {
-  animation: slideIn 0.25s ease-out both;
+  animation: slideIn 0.2s ease-out both;
 }
 
 .animate-pulse-dot {
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
-/* ─── Focus ring ───────────────────────────────────────────── */
 input:focus,
 select:focus,
 textarea:focus {
@@ -88,7 +122,20 @@ textarea:focus {
   border-color: rgba(99, 102, 241, 0.5) !important;
 }
 
-/* ─── Selection ────────────────────────────────────────────── */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.55);
+  outline-offset: 2px;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  transition-duration: 150ms;
+}
+
 ::selection {
   background: rgba(99, 102, 241, 0.3);
   color: #fff;
