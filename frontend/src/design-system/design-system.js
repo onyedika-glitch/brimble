@@ -327,7 +327,7 @@ class DsSelect extends HTMLElement {
   }
 }
 
-customElements.define('ds-select', DsSelect);
+if (!customElements.get('ds-select')) customElements.define('ds-select', DsSelect);
 
 
 class DsStatusBadge extends HTMLElement {
