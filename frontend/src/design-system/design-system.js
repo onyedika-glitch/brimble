@@ -146,6 +146,8 @@ class DsCard extends HTMLElement {
   };
 
   connectedCallback() {
+    if (this.shadowRoot) return;
+
     const shadow = this.attachShadow({ mode: 'open' });
     if (window.__DS_STYLES) shadow.adoptedStyleSheets = [window.__DS_STYLES];
     shadow.innerHTML = `<style>${CARD_SHADOW_CSS}</style>
