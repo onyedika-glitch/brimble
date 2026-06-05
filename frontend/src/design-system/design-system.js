@@ -1,3 +1,10 @@
+const escapeHtml = (value) => String(value)
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;');
+
 class DsButton extends HTMLElement {
   static props = {
     label: { type: 'string', default: 'Button' },
@@ -23,10 +30,10 @@ class DsButton extends HTMLElement {
   }
 
   render() {
-    const label = this.getAttribute('label') || 'Button';
+    const label = escapeHtml(this.getAttribute('label') || 'Button');
     const variant = this.getAttribute('variant') || 'primary';
     const size = this.getAttribute('size') || 'md';
-    const icon = this.getAttribute('icon') || '';
+    const icon = escapeHtml(this.getAttribute('icon') || '');
     const iconPosition = this.getAttribute('icon-position') || 'left';
     const loading = this.hasAttribute('loading');
     const disabled = this.hasAttribute('disabled');
@@ -191,14 +198,14 @@ class DsInput extends HTMLElement {
   }
 
   render() {
-    const label = this.getAttribute('label') || '';
-    const placeholder = this.getAttribute('placeholder') || '';
-    const value = this.getAttribute('value') || '';
+    const label = escapeHtml(this.getAttribute('label') || '');
+    const placeholder = escapeHtml(this.getAttribute('placeholder') || '');
+    const value = escapeHtml(this.getAttribute('value') || '');
     const type = this.getAttribute('type') || 'text';
     const size = this.getAttribute('size') || 'md';
-    const icon = this.getAttribute('icon') || '';
-    const hint = this.getAttribute('hint') || '';
-    const error = this.getAttribute('error') || '';
+    const icon = escapeHtml(this.getAttribute('icon') || '');
+    const hint = escapeHtml(this.getAttribute('hint') || '');
+    const error = escapeHtml(this.getAttribute('error') || '');
     const disabled = this.hasAttribute('disabled');
     const readonly = this.hasAttribute('readonly');
     const required = this.hasAttribute('required');
@@ -273,12 +280,12 @@ class DsSelect extends HTMLElement {
   }
 
   render() {
-    const label = this.getAttribute('label') || '';
+    const label = escapeHtml(this.getAttribute('label') || '');
     const value = this.getAttribute('value') || '';
-    const placeholder = this.getAttribute('placeholder') || 'Select...';
+    const placeholder = escapeHtml(this.getAttribute('placeholder') || 'Select...');
     const size = this.getAttribute('size') || 'md';
-    const hint = this.getAttribute('hint') || '';
-    const error = this.getAttribute('error') || '';
+    const hint = escapeHtml(this.getAttribute('hint') || '');
+    const error = escapeHtml(this.getAttribute('error') || '');
     const disabled = this.hasAttribute('disabled');
     const required = this.hasAttribute('required');
 
@@ -305,7 +312,7 @@ class DsSelect extends HTMLElement {
       const optValue = typeof opt === 'string' ? opt : opt.value;
       const optLabel = typeof opt === 'string' ? opt : opt.label;
       const selected = optValue === value ? 'selected' : '';
-      return `<option value="${optValue}" ${selected}>${optLabel}</option>`;
+      return `<option value="${escapeHtml(optValue)}" ${selected}>${escapeHtml(optLabel)}</option>`;
     }).join('');
 
     const hintHtml = hint && !error ? `<span class="ds-select__hint" id="${hintId}">${hint}</span>` : '';
