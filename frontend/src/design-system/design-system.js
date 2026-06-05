@@ -47,7 +47,7 @@ class DsButton extends HTMLElement {
         ? `${iconEl}<span class="ds-button__label">${label}</span>`
         : `<span class="ds-button__label">${label}</span>${iconEl}`;
 
-    this.innerHTML = `<button class="ds-button ${variantClass} ${sizeClass} ${widthClass} ${disabledClass}" ${disabled || loading ? 'disabled' : ''}>${content}</button>`;
+    this.innerHTML = `<button type="button" class="ds-button ${variantClass} ${sizeClass} ${widthClass} ${disabledClass}" ${disabled || loading ? 'disabled' : ''}>${content}</button>`;
 
     if (typeof lucide !== 'undefined') {
       lucide.createIcons({ root: this });
