@@ -159,7 +159,7 @@ class DsCard extends HTMLElement {
   }
 }
 
-customElements.define('ds-card', DsCard);
+if (!customElements.get('ds-card')) customElements.define('ds-card', DsCard);
 
 
 class DsInput extends HTMLElement {
