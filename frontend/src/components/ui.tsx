@@ -54,7 +54,7 @@ export function PrBadge({ prNumber }: { prNumber: number }) {
 
 export function Stat({ label, value, isUrl }: { label: string; value: string; isUrl?: boolean }) {
     return (
-        <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-xl p-4 overflow-hidden">
+        <div className="ui-card border border-zinc-800/40 rounded-xl p-4 overflow-hidden">
             <div className="text-xs font-medium text-zinc-500 mb-1">{label}</div>
             <div className={`text-sm font-mono truncate ${isUrl && value !== '—' ? 'text-indigo-400' : 'text-zinc-200'}`}>
                 {isUrl && value !== '—' && value.startsWith('http')
@@ -73,10 +73,10 @@ export function EmptyState({ icon: Icon, title, description, children }: {
 }) {
     return (
         <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
-            <div className="w-14 h-14 rounded-lg bg-zinc-800/50 flex items-center justify-center mb-4">
-                <Icon size={24} className="text-zinc-600" />
+            <div className="ui-card w-14 h-14 rounded-xl flex items-center justify-center mb-4 border border-zinc-800/40">
+                <Icon size={24} className="text-zinc-500" />
             </div>
-            <h3 className="text-base font-semibold text-zinc-300 mb-1">{title}</h3>
+            <h3 className="text-base font-semibold text-zinc-200 mb-1">{title}</h3>
             <p className="text-sm text-zinc-500 max-w-xs">{description}</p>
             {children && <div className="mt-5">{children}</div>}
         </div>

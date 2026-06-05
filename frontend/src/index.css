@@ -1,6 +1,14 @@
 @import "tailwindcss";
 
+/*
+  Global UI polish
+  - smoother type + spacing defaults
+  - consistent surfaces, borders, focus
+  - nicer scrollbars + selection
+*/
+
 :root {
+  /* keep existing tokens (some are used directly in UI) */
   --theme-zinc-0: #ffffff;
   --theme-zinc-200: #e4e4e7;
   --theme-zinc-400: #a1a1aa;
@@ -13,6 +21,7 @@
   --theme-zinc-925: #111113;
   --theme-zinc-950: #09090b;
   --theme-zinc-975: #070709;
+
   --theme-indigo-400: #818cf8;
   --theme-indigo-500: #6366f1;
   --theme-indigo-600: #4f46e5;
@@ -24,27 +33,35 @@
   --theme-amber-400: #fbbf24;
   --theme-blue-400: #60a5fa;
   --theme-pink-400: #f472b6;
+
   --ds-surface-base: var(--theme-zinc-950);
   --ds-surface-raised: var(--theme-zinc-975);
   --ds-surface-card: var(--theme-zinc-900);
   --ds-surface-overlay: var(--theme-zinc-925);
   --ds-surface-input: rgba(9, 9, 11, 0.6);
+
   --ds-border-default: rgba(39, 39, 42, 0.75);
   --ds-border-hover: rgba(63, 63, 70, 0.9);
+
   --ds-text-primary: var(--theme-zinc-200);
   --ds-text-heading: var(--theme-zinc-0);
   --ds-text-secondary: var(--theme-zinc-400);
   --ds-text-muted: var(--theme-zinc-500);
   --ds-text-dimmed: var(--theme-zinc-600);
 
+  --ui-ring: 0 0 0 3px rgba(99, 102, 241, 0.22);
+  --ui-shadow-sm: 0 1px 2px rgba(0,0,0,.35);
+  --ui-shadow-md: 0 10px 30px rgba(0,0,0,.35);
+
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  line-height: 1.45;
+  font-weight: 450;
+  letter-spacing: -0.01em;
   color-scheme: dark;
   color: var(--ds-text-primary);
   background-color: var(--ds-surface-base);
   font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -55,12 +72,18 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
   background:
-    linear-gradient(180deg, rgba(24, 24, 27, 0.45) 0, rgba(7, 7, 9, 0) 260px),
+    radial-gradient(900px 600px at 20% -10%, rgba(99, 102, 241, 0.18), transparent 60%),
+    radial-gradient(700px 500px at 85% 0%, rgba(139, 92, 246, 0.14), transparent 55%),
+    linear-gradient(180deg, rgba(24, 24, 27, 0.55) 0, rgba(7, 7, 9, 0) 320px),
     var(--ds-surface-base);
 }
 
@@ -69,9 +92,10 @@ body {
   min-height: 100vh;
 }
 
+/* nicer, consistent scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -79,14 +103,19 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(113, 113, 122, 0.3);
+  background: rgba(113, 113, 122, 0.28);
   border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(113, 113, 122, 0.5);
+  background: rgba(113, 113, 122, 0.45);
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
+/* animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
@@ -99,32 +128,33 @@ body {
 
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  50% { opacity: 0.45; }
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.2s ease-out both;
+  animation: fadeIn 0.18s ease-out both;
 }
 
 .animate-slideIn {
-  animation: slideIn 0.2s ease-out both;
+  animation: slideIn 0.18s ease-out both;
 }
 
 .animate-pulse-dot {
-  animation: pulse-dot 2s ease-in-out infinite;
+  animation: pulse-dot 1.8s ease-in-out infinite;
 }
 
+/* better default focus */
 input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
-  border-color: rgba(99, 102, 241, 0.5) !important;
+  box-shadow: var(--ui-ring);
+  border-color: rgba(99, 102, 241, 0.55) !important;
 }
 
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid rgba(99, 102, 241, 0.55);
+  outline: 2px solid rgba(99, 102, 241, 0.65);
   outline-offset: 2px;
 }
 
@@ -137,6 +167,14 @@ textarea {
 }
 
 ::selection {
-  background: rgba(99, 102, 241, 0.3);
+  background: rgba(99, 102, 241, 0.28);
   color: #fff;
+}
+
+/* small utility: premium card surface */
+.ui-card {
+  background: rgba(24, 24, 27, 0.6);
+  border: 1px solid rgba(63, 63, 70, 0.35);
+  box-shadow: var(--ui-shadow-sm);
+  backdrop-filter: blur(10px);
 }
