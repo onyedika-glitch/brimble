@@ -244,7 +244,7 @@ class DsInput extends HTMLElement {
   }
 }
 
-customElements.define('ds-input', DsInput);
+if (!customElements.get('ds-input')) customElements.define('ds-input', DsInput);
 
 
 class DsSelect extends HTMLElement {
