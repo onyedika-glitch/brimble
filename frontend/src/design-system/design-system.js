@@ -292,8 +292,13 @@ class DsSelect extends HTMLElement {
     const sizeClass = `ds-select__field--${size}`;
     const errorClass = error ? 'ds-select__field--error' : '';
 
+    // Generate stable ID for select and associated elements
+    const selectId = this.id || `ds-select-${Math.random().toString(36).substr(2, 9)}`;
+    const hintId = `${selectId}-hint`;
+    const errorId = `${selectId}-error`;
+
     const labelHtml = label
-      ? `<label class="ds-select__label">${label}${required ? '<span class="ds-select__required">*</span>' : ''}</label>`
+      ? `<label class="ds-select__label" for="${selectId}">${label}${required ? '<span class="ds-select__required">*</span>' : ''}</label>`
       : '';
 
     const optionsHtml = options.map(opt => {
@@ -303,17 +308,27 @@ class DsSelect extends HTMLElement {
       return `<option value="${optValue}" ${selected}>${optLabel}</option>`;
     }).join('');
 
-    const hintHtml = hint && !error ? `<span class="ds-select__hint">${hint}</span>` : '';
-    const errorHtml = error ? `<span class="ds-select__error">${error}</span>` : '';
+    const hintHtml = hint && !error ? `<span class="ds-select__hint" id="${hintId}">${hint}</span>` : '';
+    const errorHtml = error ? `<span class="ds-select__error" id="${errorId}">${error}</span>` : '';
+
+    // Build aria-describedby attribute
+    const describedByParts = [];
+    if (hint && !error) describedByParts.push(hintId);
+    if (error) describedByParts.push(errorId);
+    const ariaDescribedBy = describedByParts.length > 0 ? `aria-describedby="${describedByParts.join(' ')}"` : '';
+    const ariaInvalid = error ? 'aria-invalid="true"' : '';
 
     this.innerHTML = `
       <div class="ds-select">
         ${labelHtml}
         <div class="ds-select__wrapper">
           <select
+            id="${selectId}"
             class="ds-select__field ${sizeClass} ${errorClass}"
             ${disabled ? 'disabled' : ''}
             ${required ? 'required' : ''}
+            ${ariaInvalid}
+            ${ariaDescribedBy}
           >
             ${!value ? `<option value="" disabled selected>${placeholder}</option>` : ''}
             ${optionsHtml}
