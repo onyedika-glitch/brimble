@@ -1,0 +1,259 @@
+/** Brimble design system: theme + tokens */
+
+/* theme/breakpoints.css */
+:root {
+  /* Reference only — use hardcoded values in media queries */
+  --theme-breakpoint-sm: 640px;
+  --theme-breakpoint-md: 768px;
+  --theme-breakpoint-lg: 1024px;
+  --theme-breakpoint-xl: 1280px;
+  --theme-breakpoint-2xl: 1400px;
+}
+
+
+/* theme/colors.css */
+:root {
+  /* Zinc - Base neutral scale */
+  --theme-zinc-0: #ffffff;
+  --theme-zinc-50: #fafafa;
+  --theme-zinc-100: #f4f4f5;
+  --theme-zinc-200: #e4e4e7;
+  --theme-zinc-300: #d4d4d8;
+  --theme-zinc-400: #a1a1aa;
+  --theme-zinc-500: #71717a;
+  --theme-zinc-600: #52525b;
+  --theme-zinc-700: #3f3f46;
+  --theme-zinc-800: #27272a;
+  --theme-zinc-850: #1f1f23;
+  --theme-zinc-900: #18181b;
+  --theme-zinc-925: #111113;
+  --theme-zinc-950: #09090b;
+  --theme-zinc-975: #070709;
+  --theme-zinc-1000: #000000;
+
+  /* Indigo - Primary accent */
+  --theme-indigo-50: #eef2ff;
+  --theme-indigo-100: #e0e7ff;
+  --theme-indigo-200: #c7d2fe;
+  --theme-indigo-300: #a5b4fc;
+  --theme-indigo-400: #818cf8;
+  --theme-indigo-500: #6366f1;
+  --theme-indigo-600: #4f46e5;
+  --theme-indigo-700: #4338ca;
+  --theme-indigo-800: #3730a3;
+  --theme-indigo-900: #312e81;
+
+  /* Violet - Secondary accent */
+  --theme-violet-400: #a78bfa;
+  --theme-violet-500: #8b5cf6;
+  --theme-violet-600: #7c3aed;
+
+  /* Emerald - Success / live states */
+  --theme-emerald-300: #6ee7b7;
+  --theme-emerald-400: #34d399;
+  --theme-emerald-500: #10b981;
+  --theme-emerald-600: #059669;
+
+  /* Pink - Blueprint / special features */
+  --theme-pink-300: #f9a8d4;
+  --theme-pink-400: #f472b6;
+  --theme-pink-500: #ec4899;
+  --theme-pink-600: #db2777;
+
+  /* Red - Error / destructive */
+  --theme-red-300: #fca5a5;
+  --theme-red-400: #f87171;
+  --theme-red-500: #ef4444;
+  --theme-red-600: #dc2626;
+
+  /* Amber - Warning */
+  --theme-amber-300: #fcd34d;
+  --theme-amber-400: #fbbf24;
+  --theme-amber-500: #f59e0b;
+
+  /* Blue - Info / links */
+  --theme-blue-400: #60a5fa;
+  --theme-blue-500: #3b82f6;
+}
+
+
+/* theme/motion.css */
+:root {
+  --theme-motion-fast: 150ms ease;
+  --theme-motion-normal: 200ms ease;
+  --theme-motion-slow: 300ms ease-out;
+  --theme-motion-spring: 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+
+/* theme/radii.css */
+:root {
+  --theme-radius-sm: 0.25rem;
+  --theme-radius-md: 0.375rem;
+  --theme-radius-lg: 0.5rem;
+  --theme-radius-xl: 0.75rem;
+  --theme-radius-2xl: 1rem;
+  --theme-radius-full: 9999px;
+}
+
+
+/* theme/shadows.css */
+:root {
+  --theme-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --theme-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --theme-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --theme-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --theme-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  --theme-shadow-glow-indigo: 0 0 12px rgba(99, 102, 241, 0.15);
+  --theme-shadow-glow-emerald: 0 0 8px rgba(16, 185, 129, 0.2);
+}
+
+
+/* theme/spacing.css */
+:root {
+  --theme-spacing-0: 0;
+  --theme-spacing-px: 1px;
+  --theme-spacing-0-5: 0.125rem;
+  --theme-spacing-1: 0.25rem;
+  --theme-spacing-1-5: 0.375rem;
+  --theme-spacing-2: 0.5rem;
+  --theme-spacing-2-5: 0.625rem;
+  --theme-spacing-3: 0.75rem;
+  --theme-spacing-3-5: 0.875rem;
+  --theme-spacing-4: 1rem;
+  --theme-spacing-5: 1.25rem;
+  --theme-spacing-6: 1.5rem;
+  --theme-spacing-8: 2rem;
+  --theme-spacing-10: 2.5rem;
+  --theme-spacing-12: 3rem;
+  --theme-spacing-16: 4rem;
+  --theme-spacing-20: 5rem;
+  --theme-spacing-24: 6rem;
+}
+
+
+/* theme/typography.css */
+:root {
+  /* Font families */
+  --theme-font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --theme-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Font sizes */
+  --theme-font-size-2xs: 0.625rem;
+  --theme-font-size-xs: 0.6875rem;
+  --theme-font-size-sm: 0.8125rem;
+  --theme-font-size-base: 0.875rem;
+  --theme-font-size-md: 0.9375rem;
+  --theme-font-size-lg: 1.125rem;
+  --theme-font-size-xl: 1.25rem;
+  --theme-font-size-2xl: 1.5rem;
+  --theme-font-size-3xl: 2rem;
+
+  /* Font weights */
+  --theme-font-weight-normal: 400;
+  --theme-font-weight-medium: 500;
+  --theme-font-weight-semibold: 600;
+  --theme-font-weight-bold: 700;
+
+  /* Line heights */
+  --theme-line-height-tight: 1.2;
+  --theme-line-height-snug: 1.35;
+  --theme-line-height-normal: 1.5;
+  --theme-line-height-relaxed: 1.625;
+
+  /* Letter spacing */
+  --theme-tracking-tighter: -0.02em;
+  --theme-tracking-tight: -0.01em;
+  --theme-tracking-normal: 0;
+  --theme-tracking-wide: 0.025em;
+  --theme-tracking-wider: 0.05em;
+}
+
+/* styles/tokens.css */
+:root {
+  /* ─── Surface ─────────────────────────────────────────── */
+  --ds-surface-base: var(--theme-zinc-950);
+  --ds-surface-raised: var(--theme-zinc-975);
+  --ds-surface-overlay: var(--theme-zinc-925);
+  --ds-surface-nav: rgba(12, 12, 14, 0.9);
+  --ds-surface-card: var(--theme-zinc-900);
+  --ds-surface-dropdown: #151517;
+  --ds-surface-input: rgba(9, 9, 11, 0.6);
+  --ds-surface-hover: rgba(39, 39, 42, 0.2);
+  --ds-surface-hover-strong: rgba(39, 39, 42, 0.5);
+  --ds-surface-active: rgba(99, 102, 241, 0.05);
+  --ds-surface-selected: rgba(99, 102, 241, 0.1);
+  --ds-surface-secondary-btn: rgba(39, 39, 42, 0.8);
+  --ds-surface-modal: var(--theme-zinc-925);
+
+  /* ─── Text ───────────────────────────────────────────── */
+  --ds-text-primary: var(--theme-zinc-200);
+  --ds-text-heading: var(--theme-zinc-0);
+  --ds-text-secondary: var(--theme-zinc-400);
+  --ds-text-muted: var(--theme-zinc-500);
+  --ds-text-dimmed: var(--theme-zinc-600);
+  --ds-text-placeholder: var(--theme-zinc-600);
+  --ds-text-inverse: var(--theme-zinc-950);
+  --ds-text-on-brand: var(--theme-zinc-0);
+
+  /* ─── Border ─────────────────────────────────────────── */
+  --ds-border-subtle: rgba(39, 39, 42, 0.6);
+  --ds-border-default: var(--theme-zinc-800);
+  --ds-border-muted: rgba(39, 39, 42, 0.3);
+  --ds-border-hover: var(--theme-zinc-700);
+  --ds-border-strong: rgba(63, 63, 70, 0.6);
+  --ds-border-active: rgba(99, 102, 241, 0.5);
+  --ds-border-selected: var(--theme-indigo-500);
+  --ds-border-input: var(--theme-zinc-800);
+  --ds-border-input-hover: var(--theme-zinc-700);
+
+  /* ─── Color (Brand / Accent) ─────────────────────────── */
+  --ds-color-brand: var(--theme-indigo-600);
+  --ds-color-brand-hover: var(--theme-indigo-500);
+  --ds-color-brand-subtle: rgba(99, 102, 241, 0.1);
+  --ds-color-brand-muted: rgba(99, 102, 241, 0.05);
+  --ds-color-brand-text: var(--theme-indigo-400);
+  --ds-color-brand-glow: var(--theme-shadow-glow-indigo);
+  --ds-color-brand-shadow: rgba(99, 102, 241, 0.15);
+
+  /* ─── Status: Success / Live ─────────────────────────── */
+  --ds-color-success: var(--theme-emerald-500);
+  --ds-color-success-text: var(--theme-emerald-400);
+  --ds-color-success-subtle: rgba(16, 185, 129, 0.1);
+  --ds-color-success-border: rgba(16, 185, 129, 0.2);
+  --ds-color-success-glow: var(--theme-shadow-glow-emerald);
+
+  /* ─── Status: Error / Destructive ────────────────────── */
+  --ds-color-error: var(--theme-red-500);
+  --ds-color-error-text: var(--theme-red-400);
+  --ds-color-error-subtle: rgba(239, 68, 68, 0.05);
+  --ds-color-error-hover: rgba(239, 68, 68, 0.1);
+  --ds-color-error-border: rgba(239, 68, 68, 0.2);
+
+  /* ─── Status: Warning ───────────────────────────────── */
+  --ds-color-warning: var(--theme-amber-500);
+  --ds-color-warning-text: var(--theme-amber-400);
+  --ds-color-warning-subtle: rgba(245, 158, 11, 0.08);
+  --ds-color-warning-border: rgba(245, 158, 11, 0.15);
+
+  /* ─── Status: Info ───────────────────────────────────── */
+  --ds-color-info: var(--theme-blue-500);
+  --ds-color-info-text: var(--theme-blue-400);
+  --ds-color-info-subtle: rgba(59, 130, 246, 0.08);
+  --ds-color-info-border: rgba(59, 130, 246, 0.15);
+
+  /* ─── Status: Blueprint (Special) ────────────────────── */
+  --ds-color-blueprint: var(--theme-pink-600);
+  --ds-color-blueprint-hover: var(--theme-pink-500);
+  --ds-color-blueprint-text: var(--theme-pink-400);
+  --ds-color-blueprint-subtle: rgba(236, 72, 153, 0.05);
+  --ds-color-blueprint-border: rgba(236, 72, 153, 0.1);
+
+  /* ─── Focus ──────────────────────────────────────────── */
+  --ds-focus-ring: 0 0 0 2px rgba(99, 102, 241, 0.25);
+  --ds-focus-border: rgba(99, 102, 241, 0.5);
+
+  /* ─── Overlay / Backdrop ─────────────────────────────── */
+  --ds-overlay-backdrop: rgba(0, 0, 0, 0.6);
+  --ds-overlay-blur: 8px;
+}
